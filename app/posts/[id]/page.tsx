@@ -4,11 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../../../lib/types";
 
-interface PostPageProps {
-  params: { id: string };
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ id: post.id }));
 }
 
-export default async function PostPage({ params }: PostPageProps) {
+type PageProps = {
+  params: { id: string };
+};
+
+export default async function PostPage({ params }: PageProps) {
   const post: Post | null = await getPostById(params.id);
 
   if (!post) {
@@ -30,10 +35,4 @@ export default async function PostPage({ params }: PostPageProps) {
       <Link href="/" className={styles.button}>← Back to Home</Link>
     </article>
   );
-}
-
-// `generateStaticParams()`에서 올바른 값 반환
-export async function generateStaticParams() {
-  const posts = await getPosts(); // 모든 블로그 글 가져오기
-  return posts.map((post) => ({ id: post.id })); // `{ id: string }[]` 형태로 반환
 }
