@@ -4,16 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../../../lib/types";
 
+// 정적 페이지 생성 (SSG 적용)
 export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map((post) => ({ id: post.id }));
 }
 
-type PageProps = {
-  params: { id: string };
-};
-
-export default async function PostPage({ params }: PageProps) {
+// Next.js의 동적 라우트에서 `params` 타입을 명확히 지정
+export default async function PostPage({ params }: { params: { id: string } }) {
   const post: Post | null = await getPostById(params.id);
 
   if (!post) {
