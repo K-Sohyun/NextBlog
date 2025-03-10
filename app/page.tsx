@@ -1,95 +1,46 @@
+import styles from "../styles/home.module.scss";
+import Link from "next/link";
 import Image from "next/image";
-import styles from "./page.module.css";
+import { getPosts } from "../lib/posts";
+import { Post } from "../lib/types";
 
-export default function Home() {
+export default async function Home() {
+  const posts: Post[] = await getPosts();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className={styles.container}>
+      <h2>Main Post📌</h2>
+      {posts.length > 0 && (
+        <div className={styles.mainPost}>
+          <Link href={`/posts/${posts[0].id}`} className={styles.postLink}>
+            <div className={styles.photoBox}>
+              <Image src={posts[0].image} alt={posts[0].title} width={800} height={400} />
+            </div>
+            <div className={styles.textBox}>
+              <h3>{posts[0].title}</h3>
+              <p>{posts[0].summary}</p>
+            </div>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+          </Link>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      )}
+
+      <h2>All Posts📌</h2>
+      <ul className={styles.posts}>
+        {posts.slice(1).map((post) => (
+          <li key={post.id}>
+            <Link href={`/posts/${post.id}`} className={styles.postLink}>
+              <div className={styles.photoBox}>
+                <Image src={post.image} alt={post.title} width={600} height={400} />
+              </div>
+              <div className={styles.textBox}>
+                <h3>{post.title}</h3>
+                <p>{post.summary}</p>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }

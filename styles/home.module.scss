@@ -1,0 +1,88 @@
+.container {
+  max-width: 1030px;
+  padding: 0 15px;
+  margin: 10rem auto;
+
+  h2 {
+    font-size: 3.4rem;
+    margin: 4rem 0;
+  }
+
+  // 공통 스타일 믹스인
+  @mixin photoBox($height) {
+    position: relative;
+    height: $height;
+    overflow: hidden;
+    border-bottom: 1px solid #000;
+
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+
+  @mixin textBox($titleSize, $descSize, $lineClamp: 1) {
+    padding: 20px 15px;
+
+    h3 {
+      font-size: $titleSize;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: $descSize;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: $lineClamp;
+      -webkit-box-orient: vertical;
+      word-break: keep-all;
+    }
+  }
+
+  // 공통 호버 효과
+  .postLink {
+    &:hover .photoBox img {
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+  }
+
+  // 메인 포스트 스타일
+  .mainPost {
+    display: block;
+    border: 1px solid #000;
+
+    .photoBox {
+      @include photoBox(500px);
+    }
+
+    .textBox {
+      @include textBox(2.8rem, 1.6rem);
+    }
+  }
+
+  // 포스트 리스트 스타일
+  .posts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    li {
+      width: calc(50% - 10px);
+      border: 1px solid #000;
+
+      .photoBox {
+        @include photoBox(300px);
+      }
+
+      .textBox {
+        @include textBox(2rem, 1.4rem, 2);
+      }
+    }
+  }
+}
