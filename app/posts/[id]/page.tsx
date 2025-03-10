@@ -4,13 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../../../lib/types";
 
-// 📌 정적 페이지 생성 (SSG 적용)
-export async function generateStaticParams() {
-  const posts: Post[] = await getPosts();
-  return posts.map((post) => ({ id: post.id }));
+interface PostPageProps {
+  params: { id: string };
 }
 
-export default async function PostPage({ params }: { params: { id: string } }) {
+export default async function PostPage({ params }: PostPageProps) {
   const post: Post | null = await getPostById(params.id);
 
   if (!post) {
@@ -32,4 +30,10 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       <Link href="/" className={styles.button}>← Back to Home</Link>
     </article>
   );
+}
+
+// `generateStaticParams()`에서 올바른 값 반환
+export async function generateStaticParams() {
+  const posts = await getPosts(); // 모든 블로그 글 가져오기
+  return posts.map((post) => ({ id: post.id })); // `{ id: string }[]` 형태로 반환
 }
