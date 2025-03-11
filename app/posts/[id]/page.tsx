@@ -10,8 +10,12 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ id: post.id }));
 }
 
-export default async function PostPage({ params }: { params: { id: string } }) {
-  const post: Post | null = await getPostById(params.id);
+// params 비동기 처리
+type PostParams = Promise<{ id: string }>;
+
+export default async function PostPage({ params }: { params: PostParams }) {
+  const { id } = await params; // await로 params를 받아야 함
+  const post: Post | null = await getPostById(id);
 
   if (!post) {
     return (
